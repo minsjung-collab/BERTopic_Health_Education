@@ -1,9 +1,9 @@
 cff-version: 1.2.0
-message: "If you use these reproducibility materials, please cite the associated manuscript."
+message: "For double-blind peer review, cite the associated manuscript as an anonymous submission."
 title: "Health Education and Health Promotion BERTopic Reproducibility Materials"
 type: software
 authors:
-  - family-names: Jung
-    given-names: Minsoo
-version: "1.0"
+  - family-names: Anonymous
+    given-names: Authors
+version: "1.0-review"
 date-released: "2026-09-10"
