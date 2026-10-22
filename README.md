@@ -1,78 +1,60 @@
 # BERTopic Health Education and Health Promotion (2016–2025)
 
-Reproducibility materials for the study:
+Reproducibility materials for:
 
-**From Behavioral Interventions to Digital Health Ecosystems: Mapping Thematic Transformation in Health Education and Health Promotion Research, 2016–2025**
+**Jung, M. Mapping Thematic Structure and Change in Health Education and Health Promotion Research, 2016–2025: A BERTopic Analysis.** *Health Promotion Practice* (under review, manuscript HPP-26-0413).
 
-## Scope of this repository
+## Scope
 
-This repository archives the verified computational configuration and analytical outputs recovered from the BERTopic analysis run on **May 24, 2026**.
+This repository archives the PubMed retrieval script, the BERTopic configuration verified from the original fitted model, the archived analytical outputs, and an article-level file of topic assignments for the analysis run on **May 24, 2026**.
 
-The historical run loaded 4,235 PubMed records and retained **4,234 records after cleaning**. The original execution log reports **73 topic IDs in total when the BERTopic outlier class (-1) is included**: 72 non-outlier topic clusters plus the outlier class. The outlier class contains 1,021 documents.
+- Corpus: 4,235 PubMed records from *Health Education & Behavior* (HEB), *Health Education Research* (HER), *Health Promotion International* (HPI), and the *American Journal of Health Promotion* (AJHP), 2016–2025.
+- One duplicate record was removed before modeling (the same AJHP 2024 article indexed under two PMIDs, 39390725 and 39390726, with identical text), leaving **4,234 articles**.
+- BERTopic identified **72 topics** plus an outlier class (Topic −1; 1,021 articles). The manuscript groups the 72 topics into 16 thematic domains.
 
 ## Repository contents
 
-- `scripts/pubmed_retrieval_20260524.py` — sanitized reproducibility copy of the May 24 PubMed retrieval/preprocessing script; the original Entrez email address was replaced with a placeholder.
-- `scripts/fit_bertopic_verified.py` — reconstruction of the BERTopic model configuration using settings recovered from the serialized fitted model.
-- `scripts/inspect_saved_model.py` — utility for inspecting a locally available serialized BERTopic model.
-- `docs/PARAMETERS.md` — UMAP, HDBSCAN, BERTopic, vectorizer, and c-TF-IDF settings read directly from the original fitted model.
-- `requirements-model.txt` — package versions documented for the original analysis environment.
-- `requirements-retrieval.txt` — dependencies for PubMed retrieval.
-- `outputs/Topic_Frequency.csv` — CSV transcription of the original May 24 topic-frequency workbook.
-- `outputs/Topic_Labels.csv` — CSV transcription of the original May 24 topic-label workbook.
-- `outputs/Journal_Topic_Comparison.csv` — CSV transcription of the original May 24 journal-level comparison workbook.
-- `outputs/Year_Topic_Distribution.csv` — CSV transcription of the original May 24 year-by-topic distribution workbook.
-- `model/SHA256SUMS.txt` — SHA-256 checksum for the original serialized BERTopic model.
+| Path | Description |
+|---|---|
+| `scripts/pubmed_retrieval_20260524.py` | Sanitized copy of the May 24, 2026 PubMed retrieval and preprocessing script (Entrez email replaced with a placeholder). Writes `Health_Promotion_BERTopic_2016_2025.csv` / `.xlsx`. |
+| `scripts/fit_bertopic_verified.py` | BERTopic configuration using the settings read from the original fitted model. |
+| `scripts/verify_outputs.py` | Rebuilds the archived topic, journal, and year tables from the article-level file and checks that they match exactly. |
+| `scripts/inspect_saved_model.py` | Prints key settings from a locally available serialized model. |
+| `data/Document_Topic_Assignments.csv` | Article-level file: PMID, DOI, journal, publication year, assigned topic, and thematic domain for all 4,234 articles. |
+| `docs/PARAMETERS.md` | UMAP, HDBSCAN, vectorizer, c-TF-IDF, and BERTopic settings read from the fitted model. |
+| `outputs/*.csv` | CSV copies of the original May 24 workbooks: `Topic_Frequency`, `Topic_Labels`, `Journal_Topic_Comparison`, `Year_Topic_Distribution`. |
+| `model/SHA256SUMS.txt` | SHA-256 checksum of the original serialized BERTopic model. |
+| `requirements-*.txt` | Software versions for retrieval and modeling. |
 
-The original `Topics_Over_Time.xlsx` workbook and May 24 execution-log text file are preserved by the study author but are not currently committed here. The original serialized model is also preserved by the study author.
+## Corpus and reproduction
 
-## Verified model settings
+The analytical corpus is the file written by the retrieval script, `Health_Promotion_BERTopic_2016_2025.csv` (4,235 records), after removal of the duplicate record (`drop_duplicates` on the `CombinedText` column). Earlier documentation referred to this corpus as `final_df.csv`; `final_df` was the name of the in-memory table in the analysis script, not a separate file.
 
-### UMAP
-- `n_neighbors=10`
-- `n_components=5`
-- `min_dist=0.0`
-- `metric='cosine'`
-- `random_state=42`
+Reproduction was verified on October 22, 2026. The archived corpus was combined with the topic assignments stored in the original fitted model (checksum in `model/SHA256SUMS.txt`). The result reproduces all four archived output tables exactly. Anyone can rerun this check from the public files:
 
-### HDBSCAN
-- `min_cluster_size=15`
-- `min_samples=5`
-- `metric='euclidean'`
-- `cluster_selection_method='eom'`
-- `prediction_data=True`
-
-### Other core settings
-- Sentence embedding model: `sentence-transformers/all-MiniLM-L6-v2`
-- CountVectorizer: `ngram_range=(1, 2)`, `min_df=5`, `max_df=0.9`, English stop words
-- BERTopic: `top_n_words=10`, `min_topic_size=10`, `nr_topics=None`, `calculate_probabilities=True`
-
-The parameter values above were recovered from the serialized fitted BERTopic object itself and were **not inferred from package defaults**.
-
-## Reproduction pathways
-
-### 1. Re-create the PubMed corpus
-Run:
 ```bash
-python scripts/pubmed_retrieval_20260524.py
+python scripts/verify_outputs.py
 ```
-The script applies the original 2016–2025 journal searches, abstract processing, PMID/DOI deduplication, and text preparation. A PubMed query run at a later date may differ slightly from the May 24, 2026 historical corpus because PubMed metadata can be corrected or re-indexed retrospectively.
 
-### 2. Refit BERTopic with the verified historical settings
-After generating/preparing the analytical corpus, install the pinned model dependencies and run:
+The corpus file is not committed here because it contains the full text of publisher-copyrighted abstracts. It is available from the author on request. It can also be regenerated from the PMIDs in `data/Document_Topic_Assignments.csv`, or by rerunning the retrieval script. A later PubMed retrieval may differ slightly from the May 24, 2026 corpus, because PubMed records can be corrected or re-indexed retrospectively.
+
+To refit the model:
+
 ```bash
 pip install -r requirements-model.txt
-python scripts/fit_bertopic_verified.py
+python scripts/fit_bertopic_verified.py   # expects data/Health_Promotion_BERTopic_2016_2025.csv
 ```
-Exact document-level replication is strongest when using the original May 24 analytical corpus (`final_df.csv`). That file could not be recovered. Therefore, this repository supports transparent reconstruction of the pipeline and model configuration but does not claim bit-for-bit re-creation of the unavailable historical input corpus.
 
-### 3. Compare against archived outputs
-The `outputs/` directory contains CSV transcriptions of four original May 24 Excel workbooks. These preserve the worksheet cell values and can be used to compare a reconstructed run with the historical results.
+Topic numbering in a refit can differ from the archived run unless the same corpus, software versions, and hardware are used, because UMAP and HDBSCAN are sensitive to the computing environment.
 
-## Serialized fitted model
-The original serialized BERTopic model was recovered and used to verify the model settings. Its SHA-256 checksum is provided in `model/SHA256SUMS.txt`.
+## Fitted model
 
-The model file itself is approximately 116 MB, which exceeds GitHub's 100 MB per-file limit for ordinary Git storage, so it is not committed here. It should be distributed through Git LFS or a research-data archive such as OSF or Zenodo if public model download is desired.
+The original serialized BERTopic model (about 116 MB) exceeds GitHub's per-file limit and is not committed. Its checksum is provided, and the model is available from the author on request.
 
-## Reproducibility limitation
-The unavailable historical `final_df.csv` means that a future PubMed retrieval cannot be guaranteed to reproduce the exact same 4,234 input records. The repository therefore supports transparent reconstruction of the analysis workflow and direct verification of the recovered model parameters, but it does not claim bit-for-bit recreation of the historical input corpus.
+## Citation
+
+See `CITATION.cff`.
+
+## License
+
+Scripts and documentation: MIT (see `LICENSE`). Third-party components remain under their own licenses (see `THIRD_PARTY_NOTICE.md`).
