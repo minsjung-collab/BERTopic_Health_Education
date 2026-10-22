@@ -1,9 +1,19 @@
 cff-version: 1.2.0
-message: "For double-blind peer review, cite the associated manuscript as an anonymous submission."
-title: "Health Education and Health Promotion BERTopic Reproducibility Materials"
+message: "If you use these materials, please cite them as below."
+title: "BERTopic Health Education and Health Promotion (2016–2025): Reproducibility Materials"
 type: software
 authors:
-  - family-names: Anonymous
-    given-names: Authors
-version: "1.0-review"
-date-released: "2026-09-10"
+  - family-names: Jung
+    given-names: Minsoo
+    affiliation: "Dongduk Women's University, Seoul, Republic of Korea"
+    orcid: "https://orcid.org/0000-0003-3317-6507"
+version: "1.1"
+date-released: "2026-10-22"
+repository-code: "https://github.com/minsjung-collab/BERTopic_Health_Education"
+license: MIT
+keywords:
+  - health education
+  - health promotion
+  - BERTopic
+  - topic modeling
+  - bibliometrics

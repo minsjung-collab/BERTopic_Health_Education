@@ -1,8 +1,8 @@
 """Reconstruct the BERTopic configuration verified from the saved May 2026 model.
 
-Expected input: a CSV containing the exact analytical corpus used in the paper.
-By default, this script looks for `data/final_df.csv` and a text column named
-`Combined_Text`. Change TEXT_COLUMN only if the archived corpus uses another name.
+Expected input: the corpus written by scripts/pubmed_retrieval_20260524.py,
+`data/Health_Promotion_BERTopic_2016_2025.csv` (4,235 records). As in the original
+run, the one duplicate record (identical `CombinedText`) is dropped, leaving 4,234.
 
 Important: Exact topic-number/assignment reproduction requires the exact historical
 analytical corpus and compatible software versions. PubMed re-downloads can change
@@ -22,8 +22,8 @@ SEED = 42
 random.seed(SEED)
 np.random.seed(SEED)
 
-INPUT_CSV = "data/final_df.csv"
-TEXT_COLUMN = "Combined_Text"
+INPUT_CSV = "data/Health_Promotion_BERTopic_2016_2025.csv"
+TEXT_COLUMN = "CombinedText"
 
 embedding_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
@@ -80,6 +80,8 @@ topic_model = BERTopic(
 
 if __name__ == "__main__":
     df = pd.read_csv(INPUT_CSV)
+    df = df.drop_duplicates(subset=[TEXT_COLUMN], keep="first").reset_index(drop=True)
+    assert len(df) == 4234, f"Expected 4,234 articles after removing the duplicate; found {len(df)}"
     docs = df[TEXT_COLUMN].fillna("").astype(str).tolist()
     topics, probabilities = topic_model.fit_transform(docs)
     topic_model.get_topic_info().to_csv("topic_info_reproduced.csv", index=False)
