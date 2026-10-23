@@ -9,10 +9,10 @@
 - `Journal`: AJHP, HEB, HER, or HPI
 - `Year`: publication year from the MEDLINE date field. Ninety-three articles show 2026; they met the 2016–2025 PubMed date query and are excluded from year-specific summaries.
 - `Topic`: BERTopic topic assigned by the original May 24, 2026 model (−1 = outlier class)
-- `Domain`: one of the 16 thematic domains used in the manuscript, or "Outlier class"
+- `Domain`: one of the 16 thematic domains used in the manuscript (Supplementary Table S3), or "Outlier class". The domain containing Topics 4, 15, and 17 is labeled "Pandemic and outbreak communication" because it also contains pre-2020 outbreak and health-information communication articles.
 
 The topic assignments were read from the original fitted model and aligned with the archived corpus. Rebuilding the archived output tables from this file reproduces them exactly (`python scripts/verify_outputs.py`).
 
 ## Not included
 
-The full-text corpus, `Health_Promotion_BERTopic_2016_2025.csv` (4,235 records; one duplicate removed before modeling), contains publisher-copyrighted abstracts. It is available from the author on request. It can also be regenerated with `scripts/pubmed_retrieval_20260524.py` or from the PMIDs above. To refit the model, place the file in this folder.
+The analytic text corpus, `Health_Promotion_BERTopic_2016_2025.csv` (4,235 records; one duplicate removed before modeling), contains publisher-copyrighted titles, processed abstracts, and keywords. It is available from the author on request. It can also be regenerated with `scripts/pubmed_retrieval_20260524.py` or from the PMIDs above. To refit the model, place the file in this folder.
